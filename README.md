@@ -9,35 +9,35 @@ This repository contains code for the SPHINXBlock blockahain project, which is a
 
 ## Function Explanation
 
-### `SPHINXVerify::verifySignature`
+#### `SPHINXVerify::verifySignature`
 
 This function verifies the signature of a block. It takes the block's hash, signature, and a SPHINX public key as input parameters. The function checks the validity of the block's signature using the provided public key and returns `true` if the signature is valid.
 
-### `SPHINXHash::SPHINX_256`
+#### `SPHINXHash::SPHINX_256`
 
 This function calculates the SPHINX-256 hash of the given data. It takes the data as input and returns the corresponding hash.
 
-### `SPHINX_Chain::Chain::addBlock`
+#### `SPHINX_Chain::Chain::addBlock`
 
 This function is used to add a block to the chain. It takes a `SPHINXMerkleBlock::MerkleBlock` object as input and adds it to the chain.
 
-### `SPHINXDb::DistributedDb::saveData`
+#### `SPHINXDb::DistributedDb::saveData`
 
 This function is responsible for saving data with a specific block hash. It takes the data and block hash as input parameters and saves the data in the distributed database.
 
-### `SPHINXDb::DistributedDb::loadData`
+#### `SPHINXDb::DistributedDb::loadData`
 
 This function is used to load data for a given block ID. It takes the block ID as input and retrieves the corresponding data from the distributed database.
 
-### `SPHINXMerkleBlock::MerkleBlock::constructMerkleTree`
+#### `SPHINXMerkleBlock::MerkleBlock::constructMerkleTree`
 
 This function constructs the Merkle tree for a given vector of `SPHINXTrx::Transaction` objects. It recursively divides the transactions into two halves, constructs the Merkle tree for each half, and then combines the roots of the left and right subtrees. The final root is calculated as the SPHINX-256 hash of the concatenated left and right roots.
 
-### `SPHINXMerkleBlock::MerkleBlock::verifyMerkleRoot`
+#### `SPHINXMerkleBlock::MerkleBlock::verifyMerkleRoot`
 
 This function verifies the Merkle root for a given vector of transactions. It compares the provided Merkle root with the root calculated from the transactions using the `constructMerkleTree` function. If they match, the function returns `true`; otherwise, it returns `false`.
 
-### `SPHINXBlock::Block`
+#### `SPHINXBlock::Block`
 
 This class represents a block in the SPHINX blockchain. It contains member functions for various block operations.
 
