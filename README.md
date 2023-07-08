@@ -7,7 +7,7 @@ This project is dedicated to the world community as an Open-source Post-quantum 
 This repository contains code for the SPHINXBlock blockahain project, which is a mining module for the SPHINX blockchain. The SPHINXBlock aims to provide a "Block" in the blockchain systems
 
 
-## Function Explanation
+## Components
 
 #### `SPHINXVerify::verifySignature`
 
