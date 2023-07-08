@@ -70,16 +70,7 @@ This class represents a block in the SPHINX blockchain. It contains member funct
 - `Block::save` and `Block::load`: These functions save a block to a file in JSON format and load a block from a file, respectively.
 
 - `Block::saveToDatabase` and `Block::loadFromDatabase`: These functions save and load a block to/from a distributed database, respectively, using JSON format.
-
-
-## Getting Started
-
-To get started with the SPHINXMiner project, follow these steps:
-
-1. Clone the repository: `git clone https://github.com/your-username/SPHINXMiner.git`
-2. Install the necessary dependencies.
-3. Explore the codebase to understand the project structure and components.
-4. Use the provided functions to mine blocks in the SPHINX blockchain.
+  
 
 ### This repository is part of the  [SPHINXPoW](https://github.com/SPHINX-HUB-ORG/SPHINXPoW) [SPHINXMiner](https://github.com/SPHINX-HUB-ORG/SPHINXMINER)
 
