@@ -4,7 +4,7 @@
 
 This project is dedicated to the world community as an Open-source Post-quantum SPHINXBlock blockchain, means anyone can join and contribute based on his/ her passion and skills. SPHINX is a blockchain protocol designed to provide secure and scalable solutions in the post-quantum era. The project aims to develop a robust and decentralized network using a Proof of Work (PoW) consensus algorithm initiated by the community. We thrilled to introduce a new design for Proof-of-Work operation.
 
-This repository contains code for the SPHINXBlock blockahain project, which is a mining module for the SPHINX blockchain. The SPHINXBlock aims to provide a "Block" in the blockchain systems
+This repository contains code for the SPHINXSign project, which is a `Block` module for the SPHINX blockchain framework. The SPHINXSign aims to provide a Signature scheme in the blockchain systems.
 
 
 ## Components
