@@ -4,7 +4,7 @@
 
 This project is dedicated to the world community as an Open-source Post-quantum blockchain layer 1 project, means anyone can join and contribute based on his/ her passion and skills. SPHINX is a blockchain protocol designed to provide secure and scalable solutions in the post-quantum era.
 
-This repository contains code for the SPHINXSign project, which is a `Block` module for the SPHINX blockchain framework. The SPHINXSign aims to provide a Signature scheme in the blockchain systems.
+This repository contains code for the SPHINXSign project, which is a `Block` module for the SPHINX blockchain framework.
 
 
 ## Components
