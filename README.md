@@ -9,69 +9,49 @@ This repository contains code for the SPHINXSign project, which is a `Block` mod
 
 ## Components
 
-#### `SPHINXVerify::verifySignature`
+### SPHINXVerify Namespace:
 
-This function verifies the signature of a block. It takes the block's hash, signature, and a SPHINX public key as input parameters. The function checks the validity of the block's signature using the provided public key and returns `true` if the signature is valid.
+- `SPHINX_PublicKey` Class: Represents a public key used for verifying the signature of a block. It has a `publicKey` member variable to store the actual public key value. The constructor initializes the `publicKey` using the provided key.
 
-#### `SPHINXHash::SPHINX_256`
+- `verifySignature` Function: Verifies the signature of a block by taking the block's hash, signature, and public key as input parameters. It internally uses the `Crypto::verify` function (implementation not provided) to perform the signature verification.
 
-This function calculates the SPHINX-256 hash of the given data. It takes the data as input and returns the corresponding hash.
+##3 SPHINXHash Namespace:
 
-#### `SPHINX_Chain::Chain::addBlock`
+- `SPHINX_256` Function: Calculates the SPHINX-256 hash of the provided data and returns the hash value as a string.
 
-This function is used to add a block to the chain. It takes a `SPHINXMerkleBlock::MerkleBlock` object as input and adds it to the chain.
+### SPHINX_Chain Namespace:
 
-#### `SPHINXDb::DistributedDb::saveData`
+- `Chain` Class: Represents a blockchain chain. It has a member function `addBlock` that is used to add a block (of type `SPHINXMerkleBlock::MerkleBlock`) to the chain.
 
-This function is responsible for saving data with a specific block hash. It takes the data and block hash as input parameters and saves the data in the distributed database.
+### SPHINXDb Namespace:
 
-#### `SPHINXDb::DistributedDb::loadData`
+- `DistributedDb` Class: Represents a distributed database. It provides two member functions:
+  - `saveData`: Saves the provided data with a specific block hash in the database.
+  - `loadData`: Loads the data associated with a given block ID from the database.
 
-This function is used to load data for a given block ID. It takes the block ID as input and retrieves the corresponding data from the distributed database.
+### SPHINXMerkleBlock Namespace:
 
-#### `SPHINXMerkleBlock::MerkleBlock::constructMerkleTree`
+- `MerkleBlock` Class: Represents a Merkle block, which is a component of a block in the blockchain. It provides the following member functions:
+  - `constructMerkleTree`: Constructs the Merkle tree for a vector of signed transactions. It recursively divides the transactions into halves, constructs the Merkle tree for each half, and combines the resulting roots using the SPHINX-256 hash algorithm.
+  - `verifyMerkleRoot`: Verifies the Merkle root by comparing the provided root with the root calculated from the signed transactions using the `constructMerkleTree` function.
 
-This function constructs the Merkle tree for a given vector of `SPHINXTrx::Transaction` objects. It recursively divides the transactions into two halves, constructs the Merkle tree for each half, and then combines the roots of the left and right subtrees. The final root is calculated as the SPHINX-256 hash of the concatenated left and right roots.
+### SPHINXBlock Namespace:
 
-#### `SPHINXMerkleBlock::MerkleBlock::verifyMerkleRoot`
+- `Block` Class: Represents a block in the blockchain. It contains various member functions for block-related operations. Some key functions include:
+  - `Block`: Constructor that takes the previous hash as a parameter and initializes other member variables such as block height, timestamp, nonce, and difficulty.
+  - `calculateBlockHash`: Calculates the hash of the block by concatenating relevant data and solving the nonce using the Proof-of-Work algorithm from the `SPHINXPoW` module (implementation not provided).
+  - `addTransaction`: Adds a transaction to the block.
+  - `calculateMerkleRoot`: Calculates the Merkle root of the block by calling the `constructMerkleTree` function of the `SPHINXMerkleBlock` namespace.
+  - `verifyBlock`: Verifies the block by checking the block's signature using the provided public key and verifying the Merkle root using the `verifyMerkleRoot` function.
+  - `setBlockHeight` and `getBlockHeight`: Set and get the block's height, respectively.
+  - `getTransactionCount`: Returns the number of transactions in the block.
+  - `isValid`: Checks if the block is valid based on the transaction count and timestamp.
+  - `setBlockchain` and `addToBlockchain`: Set the blockchain pointer and add the block to the blockchain, respectively.
+  - `toJson` and `fromJson`: Functions to convert the block object to JSON format and vice versa.
+  - `save` and `load`: Functions to save and load the block from a file.
+  - `saveToDatabase` and `loadFromDatabase`: Functions to save and load the block data to/from a distributed database using the `DistributedDb` class.
 
-This function verifies the Merkle root for a given vector of transactions. It compares the provided Merkle root with the root calculated from the transactions using the `constructMerkleTree` function. If they match, the function returns `true`; otherwise, it returns `false`.
-
-#### `SPHINXBlock::Block`
-
-This class represents a block in the SPHINX blockchain. It contains member functions for various block operations.
-
-- `Block::calculateBlockHash`: This function calculates the block's hash by concatenating the previous hash, Merkle root, timestamp, nonce, and transactions. It also uses the Proof-of-Work algorithm from `SPHINXPoW::solveNonce` to solve the nonce and obtain the final block hash.
-
-- `Block::addTransaction`: This function adds a transaction to the block's transaction vector.
-
-- `Block::calculateMerkleRoot`: This function calculates the Merkle root of the block's transactions using the `constructMerkleTree` function from `SPHINXMerkleBlock::MerkleBlock`.
-
-- `Block::getBlockHash`: This function returns the block's hash by calling `calculateBlockHash`.
-
-- `Block::verifyBlock`: This function verifies the block by checking its signature using the provided public key and verifying the Merkle root using `merkleBlock_.verifyMerkleRoot`.
-
-- `Block::verifySignature`: This function calculates the block's hash and verifies its signature using the provided public key.
-
-- `Block::setBlockHeight`: This function sets the block's height.
-
-- `Block::getBlockHeight`: This function returns the block's height.
-
-- `Block::getTransactionCount`: This function returns the number of transactions in the block.
-
-- `Block::isValid`: This function checks if the block is valid based on the transaction count and timestamp.
-
-- `Block::setBlockchain`: This function sets the blockchain pointer to the provided blockchain object.
-
-- `Block::addToBlockchain`: This function adds the block to the blockchain by calling `blockchain_->addBlock(merkleBlock_)` if the blockchain pointer is valid.
-
-- `Block::toJson` and `Block::fromJson`: These functions convert the block object to JSON format and parse a JSON object to initialize the block, respectively.
-
-- `Block::save` and `Block::load`: These functions save a block to a file in JSON format and load a block from a file, respectively.
-
-- `Block::saveToDatabase` and `Block::loadFromDatabase`: These functions save and load a block to/from a distributed database, respectively, using JSON format.
   
-
 ### This repository is part of the  [SPHINXPoW](https://github.com/SPHINX-HUB-ORG/SPHINXPoW) [SPHINXMiner](https://github.com/SPHINX-HUB-ORG/SPHINXMINER)
 
 Please note that the code in this repository is a part of the SPHINX blockchain algorithm, which is currently in development and not fully integrated or extensively tested for functionality. The purpose of this repository is to provide a framework and algorithm for "Block" in the SPHINX blockchain project.
