@@ -9,33 +9,33 @@ This repository contains code for the SPHINXSign project, which is a `Block` mod
 
 ## Components
 
-### SPHINXVerify Namespace:
+#### SPHINXVerify Namespace:
 
 - `SPHINX_PublicKey` Class: Represents a public key used for verifying the signature of a block. It has a `publicKey` member variable to store the actual public key value. The constructor initializes the `publicKey` using the provided key.
 
 - `verifySignature` Function: Verifies the signature of a block by taking the block's hash, signature, and public key as input parameters. It internally uses the `Crypto::verify` function (implementation not provided) to perform the signature verification.
 
-##3 SPHINXHash Namespace:
+#### SPHINXHash Namespace:
 
 - `SPHINX_256` Function: Calculates the SPHINX-256 hash of the provided data and returns the hash value as a string.
 
-### SPHINX_Chain Namespace:
+#### SPHINX_Chain Namespace:
 
 - `Chain` Class: Represents a blockchain chain. It has a member function `addBlock` that is used to add a block (of type `SPHINXMerkleBlock::MerkleBlock`) to the chain.
 
-### SPHINXDb Namespace:
+#### SPHINXDb Namespace:
 
 - `DistributedDb` Class: Represents a distributed database. It provides two member functions:
   - `saveData`: Saves the provided data with a specific block hash in the database.
   - `loadData`: Loads the data associated with a given block ID from the database.
 
-### SPHINXMerkleBlock Namespace:
+#### SPHINXMerkleBlock Namespace:
 
 - `MerkleBlock` Class: Represents a Merkle block, which is a component of a block in the blockchain. It provides the following member functions:
   - `constructMerkleTree`: Constructs the Merkle tree for a vector of signed transactions. It recursively divides the transactions into halves, constructs the Merkle tree for each half, and combines the resulting roots using the SPHINX-256 hash algorithm.
   - `verifyMerkleRoot`: Verifies the Merkle root by comparing the provided root with the root calculated from the signed transactions using the `constructMerkleTree` function.
 
-### SPHINXBlock Namespace:
+#### SPHINXBlock Namespace:
 
 - `Block` Class: Represents a block in the blockchain. It contains various member functions for block-related operations. Some key functions include:
   - `Block`: Constructor that takes the previous hash as a parameter and initializes other member variables such as block height, timestamp, nonce, and difficulty.
