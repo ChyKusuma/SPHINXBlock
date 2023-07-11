@@ -12,54 +12,61 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// This code appears to be a C++ program that implements various classes and namespaces related to blockchain functionality. Let's go through the code and explain each part in detail:
+// This code appears to be a C++ program that implements various classes and namespaces related to blockchain functionality.
 
-// SPHINXVerify namespace:
+// Namespace SPHINXVerify:
 
-  // Contains the SPHINX_PublicKey class, which is a placeholder definition for the SPHINX public key.
-  // Defines the verifySignature function, which is used to verify the signature of a block. The function takes the block hash, signature, and a public key as parameters.
+  // The SPHINX_PublicKey class represents a public key used for verifying the signature of a block.
+  // The class has a public member variable publicKey of type std::string to store the public key.
+  // It also has a constructor that takes a std::string key as input and initializes the publicKey member variable.
+  // The verifySignature function takes a block hash, a signature, and a SPHINX_PublicKey object as input parameters.
+  // This function verifies the signature of the block using the provided signature and public key.
+  // It calls the Crypto::verify function, passing the block hash, signature, and public key as arguments, and returns a boolean value indicating whether the verification was successful.
 
-// SPHINXHash namespace:
+// Namespace SPHINXHash:
+  // This namespace contains a declaration for the SPHINX_256 function, which calculates the SPHINX-256 hash of the input data.
+  // The function takes a std::string data as input and returns a std::string representing the calculated hash.
 
-  // Contains the SPHINX_256 function, which calculates the SPHINX-256 hash of the provided data. The function takes a string of data as input and returns the hash as a string.
+// Namespace SPHINX_Chain:
+  // The Chain class represents a blockchain.
+  // It provides a member function addBlock that takes a SPHINXMerkleBlock::MerkleBlock object as input.
+  // This function is responsible for adding a block to the chain. The implementation details of this function are not provided in the given code.
 
-// SPHINX_Chain namespace:
+// Namespace SPHINXDb:
+  // The DistributedDb class represents a distributed database.
+  // It has two member functions: saveData and loadData.
+  // The saveData function takes a std::string data and a block hash as input.
+  // This function saves the provided data with the specific block hash in the distributed database.
+  // The loadData function takes a block ID as input and returns the corresponding data from the distributed database.
 
-  // Contains the Chain class, which represents a blockchain. It provides a function called addBlock to add a block to the chain. The addBlock function takes a SPHINXMerkleBlock::MerkleBlock object as a parameter.
+// Namespace SPHINXMerkleBlock:
+  // The MerkleBlock class represents a Merkle block in a blockchain.
+  // It provides a member function constructMerkleTree that constructs the Merkle tree from a vector of SPHINXTrx::Transaction objects.
+  // The function recursively splits the transactions into halves and calculates the SPHINX-256 hash of the concatenated left and right roots until it reaches the base case of a single transaction.
+  // The verifyMerkleRoot function takes a Merkle root and a vector of SPHINXTrx::Transaction objects as input.
+  // It calculates the constructed Merkle root using the constructMerkleTree function and compares it with the provided Merkle root to verify its validity.
 
-// SPHINXDb namespace:
-
-  // Contains the DistributedDb class, which represents a distributed database. It provides functions to save and load data with a specific block hash. The saveData function takes data and a block hash as parameters, while the loadData function takes a block ID as a parameter.
-
-// SPHINXMerkleBlock namespace:
-
-  // Contains the MerkleBlock class, which is responsible for constructing and verifying the Merkle tree.
-  // The constructMerkleTree function constructs the Merkle tree for a vector of SPHINXTrx::Transaction objects and returns the root hash of the tree as a string.
-  // The verifyMerkleRoot function verifies the Merkle root by comparing the constructed root with the provided root for a given set of transactions.
-
-// SPHINXBlock namespace:
-
-  // Contains the Block class, representing a block in the blockchain.
-  // The constructor Block initializes a block object with the previous block's hash and sets other member variables such as the timestamp, block height, nonce, and difficulty.
-  // The calculateBlockHash function calculates the block's hash by concatenating the previous hash, Merkle root, timestamp, nonce, and transactions. It also utilizes the Proof-of-Work algorithm from SPHINXPoW to solve the nonce and obtain the block hash.
-  // The addTransaction function adds a transaction to the block's list of transactions.
-  // The calculateMerkleRoot function uses the MerkleBlock class to calculate the Merkle root of the block's transactions.
-  // The getBlockHash function returns the block's hash by calling calculateBlockHash.
-  // The verifyBlock function verifies the block's signature and Merkle root using the provided public key.
+// Namespace SPHINXBlock:
+  // The Block class represents a block in the blockchain.
+  // It has member variables such as previousHash_, blockHeight_, nonce_, difficulty_, timestamp_, transactions_, merkleRoot_, and signature_ to store various block-related information.
+  // The constructor of the Block class takes the previous hash as input and initializes the member variables with default values.
+  // The addTransaction function adds a transaction to the block by appending it to the transactions_ vector.
+  // The calculateBlockHash function calculates the hash of the block by concatenating the previous hash, Merkle root, timestamp, nonce, and transactions, and solving the nonce using the Proof-of-Work algorithm from SPHINXPoW::solveNonce.
+  // The calculateMerkleRoot function calculates the Merkle root of the block by calling the constructMerkleTree function from the SPHINXMerkleBlock namespace.
+  // The getBlockHash function returns the calculated hash of the block.
+  // The verifyBlock function verifies the block's signature and Merkle root.
   // The verifySignature function calculates the block's hash and verifies its signature using the provided public key.
-  // The setBlockHeight and getBlockHeight functions are used to set and get the block's height.
+  // The setBlockHeight and getBlockHeight functions are used to set and retrieve the block's height, respectively.
   // The getTransactionCount function returns the number of transactions in the block.
   // The isValid function checks if the block is valid based on the transaction count and timestamp.
   // The setBlockchain function sets the blockchain pointer to the provided blockchain object.
   // The addToBlockchain function adds the block to the blockchain if the blockchain pointer is valid.
   // The toJson function converts the block object to JSON format.
-  // The fromJson function parses a JSON object and assigns the values to the corresponding member variables.
+  // The fromJson function parses the JSON object and assigns values to the corresponding member variables.
   // The save function saves the block to a file in JSON format.
-  // The load function loads a block from a file in JSON format.
-  // The saveToDatabase function converts the block object to JSON format, gets the block hash as the database key, converts the JSON data to a string, and saves the block data to the distributed database.
-  // The loadFromDatabase function loads a block from the distributed database based on the provided block ID.
-
-// The code snippet represents a partial implementation of a blockchain, including block creation, Merkle tree construction, block verification, serialization to JSON, and saving/loading to/from a file or distributed database.
+  // The load function loads a block from a file.
+  // The saveToDatabase function saves the block data to the distributed database using the saveData function from the SPHINXDb namespace.
+  // The loadFromDatabase function loads a block from the distributed database using the loadData function from the SPHINXDb namespace.
 
 // The code implements classes and functions for block management, Merkle tree construction and verification, signature verification, hash generation, and saving/loading block data to a distributed database. It provides the necessary functionality to work with blocks in a blockchain system.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +74,7 @@
 
 
 #include <stdexcept>
-#include <fstream>
+#include <fstream> 
 #include <iostream>
 #include <ctime>
 #include <string>
@@ -81,18 +88,27 @@
 #include "Chain.hpp"
 #include "PoW.hpp"
 #include "db.hpp"
+#include "Verify.hpp"
 
 
 using json = nlohmann::json;
 
+
 namespace SPHINXVerify {
     class SPHINX_PublicKey {
     public:
-        // Placeholder definition for SPHINX_PublicKey
+        std::string publicKey;  // Placeholder for the public key
+
+        // Constructor
+        SPHINX_PublicKey(const std::string& key) : publicKey(key) {}
     };
 
     // Function to verify the signature of a block
-    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINX_PublicKey& publicKey);
+    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINX_PublicKey& publicKey) {
+        // Verify the signature of the block using the provided signature and public key
+        bool verified = Crypto::verify(blockHash, signature, publicKey.publicKey);
+        return verified;
+    }
 }
 
 namespace SPHINXHash {
@@ -148,22 +164,41 @@ namespace SPHINXMerkleBlock {
         }
 
         // Function to verify the Merkle root
-        bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& transactions) const {
-            // If there are no transactions, the Merkle root should be empty
-            if (transactions.empty()) {
-                return merkleRoot.empty();
-            }
-
-            // Construct the Merkle root for the given transactions
-            std::string constructedRoot = constructMerkleTree(transactions);
-
-            // Compare the constructed root with the provided Merkle root
-            return (constructedRoot == merkleRoot);
+        bool MerkleBlock::verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions) const {
+        // Base case: If there are no signed transactions, the Merkle root should be an empty string
+        if (signedTransactions.empty()) {
+            return merkleRoot.empty();
         }
 
-        // Function to verify the Merkle root for signed transactions
-        bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions) const {
-            // Implementation of verifyMerkleRoot...
+        // Calculate the constructed Merkle root using the signed transactions
+        std::string constructedRoot = constructMerkleTree(signedTransactions);
+
+        // Compare the constructed Merkle root with the provided Merkle root
+        return (constructedRoot == merkleRoot);
+        }
+
+        std::string MerkleBlock::constructMerkleTree(const std::vector<SPHINXTrx::Transaction>& signedTransactions) const {
+            // Base case: If there are no signed transactions, return an empty string
+            if (signedTransactions.empty()) {
+                return "";
+            }
+
+            // Base case: If there is only one signed transaction, return its hash as the Merkle tree root
+            if (signedTransactions.size() == 1) {
+                return SPHINXMerkleBlock::SPHINXHash::SPHINX_256(signedTransactions[0].transaction);
+            }
+
+            // Recursive case: Divide the signed transactions into two halves
+            size_t mid = signedTransactions.size() / 2;
+            std::vector<SPHINXTrx::Transaction> leftTransactions(signedTransactions.begin(), signedTransactions.begin() + mid);
+            std::vector<SPHINXTrx::Transaction> rightTransactions(signedTransactions.begin() + mid, signedTransactions.end());
+
+            // Recursively construct the Merkle tree for the left and right subtrees
+            std::string leftRoot = constructMerkleTree(leftTransactions);
+            std::string rightRoot = constructMerkleTree(rightTransactions);
+
+            // Combine the left and right roots by hashing them together
+            return SPHINXMerkleBlock::SPHINXHash::SPHINX_256(leftRoot + rightRoot);
         }
     };
 }
@@ -280,7 +315,6 @@ namespace SPHINXBlock {
             transactions_.push_back(transactionJson.get<std::string>());  // Retrieve each transaction from the JSON array
         }
     }
-
 
     bool Block::save(const std::string& filename) const {
         // Convert the block object to JSON format
