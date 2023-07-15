@@ -24,7 +24,6 @@
 #include <string>
 #include <vector>
 
-#include "Block.hpp"
 #include "Hash.hpp"
 #include "Sign.hpp"
 #include "json.hpp"
@@ -33,6 +32,8 @@
 #include "PoW.hpp"
 #include "db.hpp"
 #include "Verify.hpp"
+#include "PoW.hpp"
+
 
 namespace SPHINXVerify {
     class SPHINX_PublicKey {
@@ -52,14 +53,6 @@ namespace SPHINXHash {
     std::string SPHINX_256(const std::string& data);
 }
 
-namespace SPHINX_Chain {
-    class Chain {
-    public:
-        // Function to add a block to the chain
-        void addBlock(const SPHINXMerkleBlock::MerkleBlock& block);
-    };
-}
-
 namespace SPHINXDb {
     class DistributedDb {
     public:
@@ -68,6 +61,9 @@ namespace SPHINXDb {
 
         // Function to load data for a given block ID
         std::string loadData(const std::string& blockId);
+
+    private:
+        std::unordered_map<std::string, std::string> database_;
     };
 }
 
@@ -79,53 +75,85 @@ namespace SPHINXMerkleBlock {
 
         // Function to verify the Merkle root
         bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions) const;
+
+    private:
+        // Function to build the Merkle root recursively
+        std::string buildMerkleRoot(const std::vector<std::string>& transactions) const;
     };
 }
 
 namespace SPHINXBlock {
     class Block {
     private:
-        std::string previousHash_;
-        std::string merkleRoot_;
-        std::string signature_;
-        uint32_t blockHeight_;
-        std::time_t timestamp_;
-        uint32_t nonce_;
-        uint32_t difficulty_;
-        std::vector<std::string> transactions_;
-        SPHINX_Chain::Chain* blockchain_;
+        std::string previousHash_;     // Hash of the previous block in the blockchain
+        std::string merkleRoot_;       // Root hash of the Merkle tree constructed from the transactions
+        std::string signature_;        // Signature of the block
+        uint32_t blockHeight_;         // Height (position) of the block in the blockchain
+        std::time_t timestamp_;        // Timestamp indicating when the block was created
+        uint32_t nonce_;               // Nonce used in the mining process to find a valid block hash
+        uint32_t difficulty_;          // Difficulty level of mining
+        std::vector<std::string> transactions_;   // Transactions included in the block
+        SPHINX_Chain::Chain* blockchain_;  // Pointer to the blockchain object
 
     public:
+        static const uint32_t MAX_BLOCK_SIZE = 1000;         // Maximum size of a block
+        static const uint32_t MAX_TIMESTAMP_OFFSET = 600;    // Maximum allowed time difference between the current time and the block's timestamp
+
+        // Constructor
         Block(const std::string& previousHash);
 
+        // Function to calculate the hash of the block
         std::string calculateBlockHash() const;
 
+        // Add a transaction to the list of transactions in the block
         void addTransaction(const std::string& transaction);
 
+        // Calculate and return the Merkle root of the transactions
         std::string calculateMerkleRoot() const;
 
+        // Get the hash of the block by calling the calculateBlockHash() function
         std::string getBlockHash() const;
 
         bool verifyBlock(const SPHINXVerify::SPHINX_PublicKey& publicKey) const;
 
+        bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINX_PublicKey& publicKey);
+
         bool verifySignature(const SPHINXVerify::SPHINX_PublicKey& publicKey) const;
 
-        void setBlockHeight(uint32_t height);
+        bool mineBlock(uint32_t difficulty);
+
+        // Setters and getters for the remaining member variables
+        void setMerkleRoot(const std::string& merkleRoot);
+
+        void setSignature(const std::string& signature);
+
+        void setBlockHeight(uint32_t blockHeight);
+
+        void setNonce(uint32_t nonce);
+
+        void setDifficulty(uint32_t difficulty);
+
+        void setTransactions(const std::vector<std::string>& transactions);
+
+        std::string getPreviousHash() const;
+
+        std::string getMerkleRoot() const;
+
+        std::string getSignature() const;
 
         uint32_t getBlockHeight() const;
 
-        uint32_t getTransactionCount() const;
+        std::time_t getTimestamp() const;
 
-        bool isValid() const;
+        uint32_t getNonce() const;
 
-        void setBlockchain(SPHINX_Chain::Chain* blockchain);
+        uint32_t getDifficulty() const;
 
-        void addToBlockchain();
+        std::vector<std::string> getTransactions() const;
 
-        // Block headers
-        json toJson() const;
+        nlohmann::json toJson() const;
 
-        void fromJson(const json& blockJson);
+        void fromJson(const nlohmann::json& blockJson);
 
         bool save(const std::string& filename) const;
 
@@ -137,4 +165,4 @@ namespace SPHINXBlock {
     };
 }
 
-#endif  // BLOCK_HPP
+#endif // BLOCK_HPP
