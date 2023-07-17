@@ -81,140 +81,35 @@
 
 using json = nlohmann::json;
 
+// Forward declarations
+
+// SPHINXVerify namespace
 namespace SPHINXVerify {
-    class SPHINX_PublicKey {
-    public:
-        std::string publicKey;  // Placeholder for the public key
+    class SPHINX_PublicKey; // Forward declaration of the SPHINX_PublicKey class
+    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINX_PublicKey& publicKey); // Forward declaration of the verifySignature function
+}
 
-        // Constructor
-        SPHINX_PublicKey(const std::string& key) : publicKey(key) {}
-    };
+// SPHINXHash namespace
+namespace SPHINXHash {
+    std::string SPHINX_256(const std::string& data); // Function declaration for SPHINX_256
+}
 
-    // Function to verify the signature of a block
-    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINX_PublicKey& publicKey) {
+// SPHINXVerify namespace (continued)
+namespace SPHINXVerify {
+    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINX_PublicKey& publicKey) {
         // Verify the signature of the block using the provided signature and public key
         bool verified = Crypto::verify(blockHash, signature, publicKey.publicKey);
         return verified;
     }
 }
 
-namespace SPHINXHash {
-    // Function to calculate the SPHINX-256 hash of data
-    std::string SPHINX_256(const std::string& data);
-}
-
-namespace SPHINXDb {
-  class DistributedDb {
-  public:
-    // Function to save data with a specific block hash
-    void saveData(const std::string& data, const std::string& blockHash) {
-      // Save the data to the distributed database using the block hash as the key
-      database_.insert({blockHash, data});
-    }
-
-    // Function to load data for a given block ID
-    std::string loadData(const std::string& blockId) {
-      // Load the data from the distributed database using the block ID
-      auto it = database_.find(blockId);
-      if (it == database_.end()) {
-        return "";
-      }
-      return it->second;
-    }
-
-  private:
-    std::unordered_map<std::string, std::string> database_;
-  };
-}
-
+// SPHINXMerkleBlock namespace
 namespace SPHINXMerkleBlock {
-    class MerkleBlock {
-    public:
-        // Function to construct the Merkle tree
-        std::string constructMerkleTree(const std::vector<SPHINXTrx::Transaction>& signedTransactions) const;
+    class MerkleBlock; // Forward declaration of the MerkleBlock class
+    std::string constructMerkleTree(const std::vector<SPHINXTrx::Transaction>& signedTransactions); // Function declaration for constructMerkleTree
+    bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions); // Function declaration for verifyMerkleRoot
+}
 
-        // Function to verify the Merkle root
-        bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions) const;
-
-    private:
-        // Function to build the Merkle root recursively
-        std::string buildMerkleRoot(const std::vector<std::string>& transactions) const;
-    };
-
-    std::string MerkleBlock::constructMerkleTree(const std::vector<SPHINXTrx::Transaction>& signedTransactions) const {
-        // Base case: If there are no signed transactions, return an empty string
-        if (signedTransactions.empty()) {
-            return "";
-        }
-
-        // Base case: If there is only one signed transaction, return its hash as the Merkle tree root
-        if (signedTransactions.size() == 1) {
-            return SPHINXHash::SPHINX_256(signedTransactions[0].transaction);
-        }
-
-        // Recursive case: Divide the signed transactions into two halves
-        size_t mid = signedTransactions.size() / 2;
-        std::vector<SPHINXTrx::Transaction> leftTransactions(signedTransactions.begin(), signedTransactions.begin() + mid);
-        std::vector<SPHINXTrx::Transaction> rightTransactions(signedTransactions.begin() + mid, signedTransactions.end());
-
-        // Recursively construct the Merkle tree for the left and right subtrees
-        std::string leftRoot = constructMerkleTree(leftTransactions);
-        std::string rightRoot = constructMerkleTree(rightTransactions);
-
-        // Combine the left and right roots by hashing them together
-        return SPHINXHash::SPHINX_256(leftRoot + rightRoot);
-    }
-
-    bool MerkleBlock::verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions) const {
-        std::vector<std::string> transactionList;
-        for (const SPHINXTrx::Transaction& signedTransaction : signedTransactions) {
-            // Verify the signature of the signed transaction using the verifySignature function from SPHINXVerify namespace
-            if (SPHINXVerify::verifySignature(signedTransaction.data, signedTransaction.signature, signedTransaction.public_key)) {
-                transactionList.push_back(signedTransaction.transaction);
-            } else {
-                // Handle invalid signature
-                std::cerr << "ERROR: Invalid signature for transaction: " << signedTransaction.transaction << std::endl;
-                return false;
-            }
-        }
-
-        // Continue with Merkle root verification if all signatures are valid
-        // Calculate the constructed Merkle root using the transactions
-        std::string constructedRoot = buildMerkleRoot(transactionList);
-
-        // Compare the constructed Merkle root with the provided Merkle root
-        if (constructedRoot == merkleRoot) {
-            return true;
-        } else {
-            std::cerr << "ERROR: Invalid Merkle root" << std::endl;
-            return false;
-        }
-    }
-
-    std::string MerkleBlock::buildMerkleRoot(const std::vector<std::string>& transactions) const {
-        // Base case: If there are no transactions, return an empty string
-        if (transactions.empty()) {
-            return "";
-        }
-
-        // Base case: If there is only one transaction, return its hash as the Merkle root
-        if (transactions.size() == 1) {
-            return SPHINXHash::SPHINX_256(transactions[0]);
-        }
-
-        // Recursive case: Divide the transactions into two halves
-        size_t mid = transactions.size() / 2;
-        std::vector<std::string> leftTransactions(transactions.begin(), transactions.begin() + mid);
-        std::vector<std::string> rightTransactions(transactions.begin() + mid, transactions.end());
-
-        // Recursively build the Merkle root for the left and right subtrees
-        std::string leftRoot = buildMerkleRoot(leftTransactions);
-        std::string rightRoot = buildMerkleRoot(rightTransactions);
-
-        // Combine the left and right roots by hashing them together
-        return SPHINXHash::SPHINX_256(leftRoot + rightRoot);
-    }
-} // namespace SPHINXMerkleBlock
 
 namespace SPHINXBlock {
     class Block {
