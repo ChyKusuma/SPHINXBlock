@@ -93,7 +93,7 @@ namespace SPHINXBlock {
         uint32_t nonce_;               // Nonce used in the mining process to find a valid block hash
         uint32_t difficulty_;          // Difficulty level of mining
         std::vector<std::string> transactions_;   // Transactions included in the block
-        SPHINX_Chain::Chain* blockchain_;  // Pointer to the blockchain object
+        SPHINXChain::Chain* blockchain_;  // Pointer to the blockchain object
 
     public:
         static const uint32_t MAX_BLOCK_SIZE = 1000;         // Maximum size of a block
