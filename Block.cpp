@@ -36,7 +36,7 @@
 
 // SPHINXBlock Namespace:
     // The SPHINXBlock namespace contains a class called Block, representing a block in the blockchain.
-    // It has several member variables representing block attributes such as previousHash_, merkleRoot_, signature_, blockHeight_, timestamp_, nonce_, difficulty_, transactions_, and a pointer to a SPHINX_Chain::Chain object called blockchain_.
+    // It has several member variables representing block attributes such as previousHash_, merkleRoot_, signature_, blockHeight_, timestamp_, nonce_, difficulty_, transactions_, and a pointer to a SPHINXChain::Chain object called blockchain_.
     // The MAX_BLOCK_SIZE and MAX_TIMESTAMP_OFFSET are constants defining the maximum size of a block and the maximum allowed time difference between the current time and the block's timestamp, respectively.
 
 // The Block class provides various functions to perform operations on the block:
@@ -81,6 +81,7 @@
 
 using json = nlohmann::json;
 
+
 // Forward declarations
 
 // SPHINXVerify namespace
@@ -110,7 +111,6 @@ namespace SPHINXMerkleBlock {
     bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions); // Function declaration for verifyMerkleRoot
 }
 
-
 namespace SPHINXBlock {
     class Block {
     private:
@@ -122,7 +122,7 @@ namespace SPHINXBlock {
         uint32_t nonce_;               // Nonce used in the mining process to find a valid block hash
         uint32_t difficulty_;          // Difficulty level of mining
         std::vector<std::string> transactions_;   // Transactions included in the block
-        SPHINX_Chain::Chain* blockchain_;  // Pointer to the blockchain object
+        SPHINXChain::Chain* blockchain_;  // Pointer to the blockchain object
 
     public:
         static const uint32_t MAX_BLOCK_SIZE = 1000;         // Maximum size of a block
@@ -168,11 +168,7 @@ namespace SPHINXBlock {
             return verifySignature(publicKey) && SPHINXMerkleBlock::verifyMerkleRoot(merkleRoot_, transactions_);
         }
 
-        bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINX_PublicKey& publicKey) {
-            // Verify the signature of the block using the provided signature and public key
-            bool verified = SPHINXVerify::verifySignature(blockHash, signature, publicKey);
-            return verified;
-        }
+        bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINX_PublicKey& publicKey);
 
         bool verifySignature(const SPHINXVerify::SPHINX_PublicKey& publicKey) const {
             // Calculate the block hash
