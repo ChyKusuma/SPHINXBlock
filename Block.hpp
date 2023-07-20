@@ -12,8 +12,8 @@
 
 
 
-#ifndef BLOCK_HPP
-#define BLOCK_HPP
+#ifndef SPHINXBLOCK_HPP
+#define SPHINXBLOCK_HPP
 
 #pragma once
 
@@ -23,6 +23,7 @@
 #include <ctime>
 #include <string>
 #include <vector>
+#include <array>
 
 #include "Hash.hpp"
 #include "Sign.hpp"
@@ -33,19 +34,21 @@
 #include "db.hpp"
 #include "Verify.hpp"
 #include "PoW.hpp"
+#include "Transaction.hpp"
+#include "Params.hpp"
 
 
 namespace SPHINXVerify {
-    class SPHINX_PublicKey {
+    class SPHINXPubKey {
     public:
         std::string publicKey;  // Placeholder for the public key
 
         // Constructor
-        SPHINX_PublicKey(const std::string& key) : publicKey(key) {}
+        SPHINXPubKey(const std::string& key) : publicKey(key) {}
     };
 
     // Function to verify the signature of a block
-    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINX_PublicKey& publicKey);
+    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXPubKey& publicKey);
 }
 
 namespace SPHINXHash {
@@ -95,7 +98,13 @@ namespace SPHINXBlock {
         std::vector<std::string> transactions_;   // Transactions included in the block
         SPHINXChain::Chain* blockchain_;  // Pointer to the blockchain object
 
+        // Checkpoint blocks for each network
+        const std::vector<std::string>& checkpointBlocks_;
+
     public:
+        // Constructor with the addition of checkpointBlocks parameter
+        Block(const std::string& previousHash, const std::vector<std::string>& checkpointBlocks);
+
         static const uint32_t MAX_BLOCK_SIZE = 1000;         // Maximum size of a block
         static const uint32_t MAX_TIMESTAMP_OFFSET = 600;    // Maximum allowed time difference between the current time and the block's timestamp
 
@@ -114,11 +123,14 @@ namespace SPHINXBlock {
         // Get the hash of the block by calling the calculateBlockHash() function
         std::string getBlockHash() const;
 
-        bool verifyBlock(const SPHINXVerify::SPHINX_PublicKey& publicKey) const;
+        // Function to verify the block using checkpoint verification
+        bool verifyBlockWithCheckpoint(const SPHINXVerify::SPHINXPubKey& publicKey) const;
 
-        bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINX_PublicKey& publicKey);
+        bool verifyBlock(const SPHINXVerify::SPHINXPubKey& publicKey) const;
 
-        bool verifySignature(const SPHINXVerify::SPHINX_PublicKey& publicKey) const;
+        bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINXPubKey& publicKey);
+
+        bool verifySignature(const SPHINXVerify::SPHINXPubKey& publicKey) const;
 
         bool mineBlock(uint32_t difficulty);
 
@@ -165,4 +177,4 @@ namespace SPHINXBlock {
     };
 }
 
-#endif // BLOCK_HPP
+#endif // SPHINXBLOCK_HPP
