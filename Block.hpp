@@ -17,6 +17,10 @@
 
 #pragma once
 
+#include <cstdint>
+#include <iostream>
+#include <unordered_map>
+
 #include <stdexcept>
 #include <fstream> 
 #include <iostream>
@@ -25,91 +29,55 @@
 #include <vector>
 #include <array>
 
-#include "Hash.hpp"
-#include "Sign.hpp"
 #include "json.hpp"
-#include "MerkleBlock.hpp"
-#include "Chain.hpp"
-#include "PoW.hpp"
-#include "db.hpp"
-#include "Verify.hpp"
-#include "PoW.hpp"
-#include "Transaction.hpp"
 #include "Params.hpp"
+#include "MerkleBlock.hpp"
 
 
-namespace SPHINXVerify {
-    class SPHINXPubKey {
-    public:
-        std::string publicKey;  // Placeholder for the public key
+using json = nlohmann::json;
 
-        // Constructor
-        SPHINXPubKey(const std::string& key) : publicKey(key) {}
-    };
+// Add the appropriate namespace for the MerkleBlock
+using namespace SPHINXMerkleBlock;
 
-    // Function to verify the signature of a block
-    bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXPubKey& publicKey);
+// Forward declarations
+namespace SPHINXTrx {
+    class Transaction; // Forward declaration of the Transaction class
 }
 
-namespace SPHINXHash {
-    // Function to calculate the SPHINX-256 hash of data
-    std::string SPHINX_256(const std::string& data);
+// Forward declarations
+namespace SPHINXChain {
+    class Chain; // Forward declaration of the Chain class
 }
 
+// Forward declarations
 namespace SPHINXDb {
-    class DistributedDb {
-    public:
-        // Function to save data with a specific block hash
-        void saveData(const std::string& data, const std::string& blockHash);
-
-        // Function to load data for a given block ID
-        std::string loadData(const std::string& blockId);
-
-    private:
-        std::unordered_map<std::string, std::string> database_;
-    };
-}
-
-namespace SPHINXMerkleBlock {
-    class MerkleBlock {
-    public:
-        // Function to construct the Merkle tree
-        std::string constructMerkleTree(const std::vector<SPHINXTrx::Transaction>& signedTransactions) const;
-
-        // Function to verify the Merkle root
-        bool verifyMerkleRoot(const std::string& merkleRoot, const std::vector<SPHINXTrx::Transaction>& signedTransactions) const;
-
-    private:
-        // Function to build the Merkle root recursively
-        std::string buildMerkleRoot(const std::vector<std::string>& transactions) const;
-    };
+    class DistributedDb; // Forward declaration of the DistributedDb class
 }
 
 namespace SPHINXBlock {
     class Block {
     private:
-        std::string previousHash_;     // Hash of the previous block in the blockchain
-        std::string merkleRoot_;       // Root hash of the Merkle tree constructed from the transactions
-        std::string signature_;        // Signature of the block
-        uint32_t blockHeight_;         // Height (position) of the block in the blockchain
-        std::time_t timestamp_;        // Timestamp indicating when the block was created
-        uint32_t nonce_;               // Nonce used in the mining process to find a valid block hash
-        uint32_t difficulty_;          // Difficulty level of mining
-        std::vector<std::string> transactions_;   // Transactions included in the block
-        SPHINXChain::Chain* blockchain_;  // Pointer to the blockchain object
-
-        // Checkpoint blocks for each network
-        const std::vector<std::string>& checkpointBlocks_;
+        // Private member variables
+        std::string previousHash_;               // The hash of the previous block in the blockchain
+        std::string merkleRoot_;                 // The Merkle root hash of the transactions in the block
+        std::string signature_;                  // The signature of the block
+        uint32_t blockHeight_;                   // The position of the block within the blockchain
+        std::time_t timestamp_;                  // The time when the block was created
+        uint32_t nonce_;                         // A random value used in the mining process to find a valid block hash
+        uint32_t difficulty_;                    // A measure of how hard it is to find a valid block hash (mining difficulty)
+        std::vector<std::string> transactions_;  // The list of transactions included in the block
+        SPHINXChain::Chain* blockchain_;         // A pointer to the blockchain (assuming SPHINXChain::Chain is a class)
+        const std::vector<std::string>& checkpointBlocks_; // Reference to the list of checkpoint blocks
 
     public:
+        static const uint32_t MAX_BLOCK_SIZE;       // Maximum allowed block size in number of transactions
+        static const uint32_t MAX_TIMESTAMP_OFFSET; // Maximum allowed timestamp difference from current time
+
+        // Constructor without checkpointBlocks parameter
+        Block(const std::string& previousHash);
+
         // Constructor with the addition of checkpointBlocks parameter
         Block(const std::string& previousHash, const std::vector<std::string>& checkpointBlocks);
-
-        static const uint32_t MAX_BLOCK_SIZE = 1000;         // Maximum size of a block
-        static const uint32_t MAX_TIMESTAMP_OFFSET = 600;    // Maximum allowed time difference between the current time and the block's timestamp
-
-        // Constructor
-        Block(const std::string& previousHash);
 
         // Function to calculate the hash of the block
         std::string calculateBlockHash() const;
@@ -120,61 +88,42 @@ namespace SPHINXBlock {
         // Calculate and return the Merkle root of the transactions
         std::string calculateMerkleRoot() const;
 
+        // Function to sign the Merkle root with SPHINCS+ private key
+        std::string signMerkleRoot(const SPHINXPrivKey& privateKey, const std::string& merkleRoot);
+
+        // Function to store the Merkle root and signature in the header of the block
+        void storeMerkleRootAndSignature(const std::string& merkleRoot, const std::string& signature);
+
         // Get the hash of the block by calling the calculateBlockHash() function
         std::string getBlockHash() const;
 
-        // Function to verify the block using checkpoint verification
-        bool verifyBlockWithCheckpoint(const SPHINXVerify::SPHINXPubKey& publicKey) const;
-
-        bool verifyBlock(const SPHINXVerify::SPHINXPubKey& publicKey) const;
-
-        bool verifySignature(const std::string& blockHash, const std::string& signature, const SPHINXVerify::SPHINXPubKey& publicKey);
-
-        bool verifySignature(const SPHINXVerify::SPHINXPubKey& publicKey) const;
-
-        bool mineBlock(uint32_t difficulty);
+        // Verify the block's signature and Merkle root
+        bool verifyBlock(const SPHINXMerkleBlock::SPHINXPubKey& publicKey) const;
 
         // Setters and getters for the remaining member variables
         void setMerkleRoot(const std::string& merkleRoot);
-
         void setSignature(const std::string& signature);
-
         void setBlockHeight(uint32_t blockHeight);
-
         void setNonce(uint32_t nonce);
-
         void setDifficulty(uint32_t difficulty);
-
         void setTransactions(const std::vector<std::string>& transactions);
-
         std::string getPreviousHash() const;
-
         std::string getMerkleRoot() const;
-
         std::string getSignature() const;
-
         uint32_t getBlockHeight() const;
-
         std::time_t getTimestamp() const;
-
         uint32_t getNonce() const;
-
         uint32_t getDifficulty() const;
-
         std::vector<std::string> getTransactions() const;
 
+        // Block headers
         nlohmann::json toJson() const;
-
         void fromJson(const nlohmann::json& blockJson);
-
         bool save(const std::string& filename) const;
-
         static Block load(const std::string& filename);
-
         bool saveToDatabase(SPHINXDb::DistributedDb& distributedDb) const;
-
         static Block loadFromDatabase(const std::string& blockId, SPHINXDb::DistributedDb& distributedDb);
     };
-}
+} // namespace SPHINXBlock
 
-#endif // SPHINXBLOCK_HPP
+#endif // SPHINX_BLOCK_HPP
