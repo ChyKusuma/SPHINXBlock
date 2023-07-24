@@ -161,8 +161,8 @@ namespace SPHINXBlock {
 
         // Function to sign the Merkle root with SPHINCS+ private key and store the signature
         void signMerkleRoot(const SPHINXPrivKey& privateKey, const std::string& merkleRoot) {
-            // SPHINCS+ signing function is available in the "Sign.cpp"
-            signature_ = SPHINXSign::sign<SPHINCS_N, SPHINCS_H, SPHINCS_D, SPHINCS_A, SPHINCS_K, SPHINCS_W, SPHINCS_V>(merkleRoot, privateKey);
+            // SPHINCS+ signing function is available in the "Sign.hpp"
+            signature_ = SPHINXSign::sign_data(merkleRoot, privateKey);
             storedMerkleRoot_ = merkleRoot;
         }
 
@@ -172,10 +172,7 @@ namespace SPHINXBlock {
             std::string blockHash = calculateBlockHash();
 
             // Assuming the SPHINCS+ verification function is available in the library
-            bool signatureValid = SPHINXVerify::verify(blockHash, signature_, publicKey);
-
-            // Return true if the signature is valid, otherwise return false
-            return signatureValid;
+            return SPHINXSign::verify_data(blockHash, signature_, publicKey);
         }
 
         // Function to verify the block's Merkle root with the given public key
@@ -443,4 +440,4 @@ int main() {
     }
 
     return 0;
-}
+} // namespace SPHINXBlock
