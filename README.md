@@ -11,11 +11,11 @@ This repository contains code for the SPHINXBlock project, which is a `Block` mo
 
 ### SPHINXHash namespace
 
-- This namespace contains a declaration for a function named SPHINX_256, which is not provided in this code. It presumably calculates the SPHINX_256 hash of the given data.
+- This namespace contains a declaration for a function named `SPHINX_256`, which is not provided in this code. It presumably calculates the `SPHINX_256` hash of the given data.
 
 ### SPHINXMerkleBlock namespace
 
-- This namespace contains a forward declaration of a class named MerkleBlock. The definition of this class is not provided in this code.
+- This namespace contains a forward declaration of a class named `MerkleBlock`. The definition of this class is not provided in this code.
 
 ### SPHINXBlock namespace
 
@@ -25,13 +25,31 @@ This repository contains code for the SPHINXBlock project, which is a `Block` mo
 
 - This is the main class representing a block in the blockchain.
   
-- It contains various private member variables to `store block` information, such as `previous block hash, Merkle root, block height, timestamp, nonce, difficulty, list of transactions, blockchain pointer`, and `checkpoint blocks` reference.
+- It contains various private member variables to
+    - store block information, such as;
+    - `previous block hash`
+    - `Merkle root`
+    - `block height`
+    - `timestamp`
+    - `nonce`
+    - `difficulty`
+    - `list of transactions`
+    - `blockchain pointer`
+    - and `checkpoint blocks` reference.
   
 - It also contains private member variables to store the `stored Merkle root` and `signature`, which are used in the `signing` and `verification` process.
   
 - The class provides several `constructors` and setter/getter functions for member variables.
   
-- It has functions to `add transactions to the block, calculate the block hash, calculate the Merkle root, sign the Merkle root using SPHINCS+ private key, verify the block's signature with a given public key, verify the block's Merkle root with a given public key, verify the entire block with a given public key`, and `mine the block` with a specified difficulty.
+- It has functions to
+    - `add transactions to the block`
+    - `calculate the block hash`
+    - `calculate the Merkle root`
+    - `sign the Merkle root` `using SPHINCS+ private key`
+    - `verify the block's signature with a given public key`
+    - `verify the block's Merkle root with a given public key`
+    - `verify the entire block with a given public key`
+    -  and `mine the block` with a specified difficulty.
 
 - The class also provides functions to convert the `block object to JSON` format and `vice versa, save the block to a file, load the block from a file, save the block to a distributed database`, and `load the block` from a `distributed database`.
 
