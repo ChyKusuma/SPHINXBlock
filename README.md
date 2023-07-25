@@ -52,7 +52,7 @@ This repository contains code for the SPHINXBlock project, which is a `Block` mo
   - `saveToDatabase` and `loadFromDatabase`: Functions to save and load the block data to/from a distributed database using the `DistributedDb` class.
 
   
-### This repository is part of the  [SPHINXPoW](https://github.com/SPHINX-HUB-ORG/SPHINXPoW) [SPHINXMiner](https://github.com/SPHINX-HUB-ORG/SPHINXMINER)
+### Note
 
 Please note that the code in this repository is a part of the SPHINX blockchain algorithm, which is currently in development and not fully integrated or extensively tested for functionality. The purpose of this repository is to provide a framework and algorithm for "Block" in the SPHINX blockchain project.
 
