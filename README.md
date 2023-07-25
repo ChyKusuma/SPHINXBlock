@@ -9,47 +9,43 @@ This repository contains code for the SPHINXBlock project, which is a `Block` mo
 
 ## Components
 
-#### SPHINXVerify Namespace:
+### SPHINXHash namespace
 
-- `SPHINX_PublicKey` Class: Represents a public key used for verifying the signature of a block. It has a `publicKey` member variable to store the actual public key value. The constructor initializes the `publicKey` using the provided key.
+- This namespace contains a declaration for a function named SPHINX_256, which is not provided in this code. It presumably calculates the SPHINX_256 hash of the given data.
 
-- `verifySignature` Function: Verifies the signature of a block by taking the block's hash, signature, and public key as input parameters. It internally uses the `Crypto::verify` function (implementation not provided) to perform the signature verification.
+### SPHINXMerkleBlock namespace
 
-#### SPHINXHash Namespace:
+- This namespace contains a forward declaration of a class named MerkleBlock. The definition of this class is not provided in this code.
 
-- `SPHINX_256` Function: Calculates the SPHINX-256 hash of the provided data and returns the hash value as a string.
+### SPHINXBlock namespace
 
-#### SPHINX_Chain Namespace:
+- This is the main namespace for the blockchain-related classes and functionalities.
 
-- `Chain` Class: Represents a blockchain chain. It has a member function `addBlock` that is used to add a block (of type `SPHINXMerkleBlock::MerkleBlock`) to the chain.
+### Block class
 
-#### SPHINXDb Namespace:
+- This is the main class representing a block in the blockchain.
+- 
+- It contains various private member variables to `store block` information, such as `previous block hash, Merkle root, block height, timestamp, nonce, difficulty, list of transactions, blockchain pointer`, and `checkpoint blocks` reference.
+  
+- It also contains private member variables to store the `stored Merkle root` and `signature`, which are used in the `signing` and `verification` process.
+  
+- The class provides several `constructors` and setter/getter functions for member variables.
+  
+- It has functions to `add transactions to the block, calculate the block hash, calculate the Merkle root, sign the Merkle root using SPHINCS+ private key, verify the block's signature with a given public key, verify the block's Merkle root with a given public key, verify the entire block with a given public key`, and `mine the block` with a specified difficulty.
 
-- `DistributedDb` Class: Represents a distributed database. It provides two member functions:
-  - `saveData`: Saves the provided data with a specific block hash in the database.
-  - `loadData`: Loads the data associated with a given block ID from the database.
+- The class also provides functions to convert the `block object to JSON` format and `vice versa, save the block to a file, load the block from a file, save the block to a distributed database`, and `load the block` from a `distributed database`.
 
-#### SPHINXMerkleBlock Namespace:
+- Lastly, there are two getter functions, `getStoredMerkleRoot()` and `getStoredSignature()`, to retrieve the stored Merkle root and signature.
 
-- `MerkleBlock` Class: Represents a Merkle block, which is a component of a block in the blockchain. It provides the following member functions:
-  - `constructMerkleTree`: Constructs the Merkle tree for a vector of signed transactions. It recursively divides the transactions into halves, constructs the Merkle tree for each half, and combines the resulting roots using the SPHINX-256 hash algorithm.
-  - `verifyMerkleRoot`: Verifies the Merkle root by comparing the provided root with the root calculated from the signed transactions using the `constructMerkleTree` function.
+- Note: The `SPHINXPrivKey, SPHINXPubKey`, and `Transaction classes/types` used in the code are not defined in this code snippet. They are likely part of the broader SPHINX cryptographic library used in this blockchain implementation.
 
-#### SPHINXBlock Namespace:
+### Block to and from JSON
 
-- `Block` Class: Represents a block in the blockchain. It contains various member functions for block-related operations. Some key functions include:
-  - `Block`: Constructor that takes the previous hash as a parameter and initializes other member variables such as block height, timestamp, nonce, and difficulty.
-  - `calculateBlockHash`: Calculates the hash of the block by concatenating relevant data and solving the nonce using the Proof-of-Work algorithm from the `SPHINXPoW` module (implementation not provided).
-  - `addTransaction`: Adds a transaction to the block.
-  - `calculateMerkleRoot`: Calculates the Merkle root of the block by calling the `constructMerkleTree` function of the `SPHINXMerkleBlock` namespace.
-  - `verifyBlock`: Verifies the block by checking the block's signature using the provided public key and verifying the Merkle root using the `verifyMerkleRoot` function.
-  - `setBlockHeight` and `getBlockHeight`: Set and get the block's height, respectively.
-  - `getTransactionCount`: Returns the number of transactions in the block.
-  - `isValid`: Checks if the block is valid based on the transaction count and timestamp.
-  - `setBlockchain` and `addToBlockchain`: Set the blockchain pointer and add the block to the blockchain, respectively.
-  - `toJson` and `fromJson`: Functions to convert the block object to JSON format and vice versa.
-  - `save` and `load`: Functions to save and load the block from a file.
-  - `saveToDatabase` and `loadFromDatabase`: Functions to save and load the block data to/from a distributed database using the `DistributedDb` class.
+- `Block::toJson()` and `Block::fromJson()` These functions are used to convert a block object to JSON format and parse a JSON object to initialize a block object, respectively.
+
+- `Block::save()` and `Block::load()` These functions are used to save a block to a file in JSON format and load a block from a file, respectively.
+
+- `Block::saveToDatabase()` and `Block::loadFromDatabase()` These functions are used to save a block to a distributed database and load a block from the distributed database, respectively.
 
   
 ### Note
