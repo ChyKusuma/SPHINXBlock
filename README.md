@@ -24,7 +24,7 @@ This repository contains code for the SPHINXBlock project, which is a `Block` mo
 ### Block class
 
 - This is the main class representing a block in the blockchain.
-- 
+  
 - It contains various private member variables to `store block` information, such as `previous block hash, Merkle root, block height, timestamp, nonce, difficulty, list of transactions, blockchain pointer`, and `checkpoint blocks` reference.
   
 - It also contains private member variables to store the `stored Merkle root` and `signature`, which are used in the `signing` and `verification` process.
