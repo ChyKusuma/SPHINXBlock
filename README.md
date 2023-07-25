@@ -37,7 +37,7 @@ This repository contains code for the SPHINXBlock project, which is a `Block` mo
 
 - Lastly, there are two getter functions, `getStoredMerkleRoot()` and `getStoredSignature()`, to retrieve the stored Merkle root and signature.
 
-- Note: The `SPHINXPrivKey, SPHINXPubKey`, and `Transaction classes/types` used in the code are not defined in this code snippet. They are likely part of the broader SPHINX cryptographic library used in this blockchain implementation.
+- Note: The `SPHINXPrivKey, SPHINXPubKey`, and `Transaction classes/types` used in the code are not defined in this code. They are part of the broader SPHINX cryptographic library used in this blockchain implementation.
 
 ### Block to and from JSON
 
