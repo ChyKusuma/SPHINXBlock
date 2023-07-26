@@ -71,11 +71,12 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <map>
 
 #include "Block.hpp"
 #include "Hash.hpp"
 #include "Sign.hpp"
-#include "json.hpp"
+#include "json.hh"
 #include "MerkleBlock.hpp"
 #include "Transaction.hpp"
 #include "Chain.hpp"
@@ -85,6 +86,7 @@
 #include "PoW.hpp"
 #include "Key.hpp"
 #include "Params.hpp"
+#include "Utxo.hpp"
 
 
 using json = nlohmann::json;
@@ -199,6 +201,21 @@ namespace SPHINXBlock {
                 // Check if the block hash meets the target difficulty
                 if (blockHash.substr(0, difficulty) == target) {
                     // Block successfully mined
+
+                    //*
+                    // UTXO function used in the mineBlock function in this version of block.cpp. 
+                    // The mineBlock function is responsible for mining a block by finding a valid hash 
+                    // that meets the required difficulty level. When a block is successfully mined, 
+                    // the mineBlock function updates the UTXO set based on the transactions included 
+                    // in the block. The UTXO set represents the unspent transaction outputs, and 
+                    // updating it is an essential part of the blockchain's functioning to ensure the 
+                    // correctness of transactions.
+                    //*
+
+                    // Update the UTXO set based on the transactions in the block
+                    std::map<std::string, SPHINXUtxo::UTXO> utxoSet; // Assuming you have access to the UTXO set
+                    SPHINXUtxo::updateUTXOSet(*this, utxoSet);
+
                     return true;
                 }
             }
